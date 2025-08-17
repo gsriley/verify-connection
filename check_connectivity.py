@@ -6,6 +6,7 @@ import socket
 
 SUBMODULE_PATH = "submodule"
 ELF_BINARY = "submodule.elf"
+SC_BINARY = "sc"
 
 def check_connectivity(host, port=53, timeout=3):
     """
